@@ -30,4 +30,6 @@ app.post("/callback", function(req, res) {
   return res.json({ status: true });
 });
 
-app.listen("3128");
+app.listen(process.env.PORT || 3000, function() {
+  console.log("server is running at port" + (process.env.PORT || 3000));
+});

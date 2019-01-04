@@ -83,7 +83,7 @@ export default {
     },
     registerEmotion() {
       axios
-        .post("http://safe-journey-46712.herokuapp.com:3128/callback", {
+        .post("http://safe-journey-46712.herokuapp.com:3000/callback", {
           emotion: this.detected_e
         })
         .then(() => {
