@@ -30,64 +30,66 @@
 <script>
 // @ is an alias to /src
 import Camera from "@/components/Camera.vue";
-import * as tf from '@tensorflow/tfjs';
-import * as mobilenetModule from '@tensorflow-models/mobilenet';
-import * as knnClassifier from '@tensorflow-models/knn-classifier';
-import axios from 'axios';
+import * as tf from "@tensorflow/tfjs";
+import * as mobilenetModule from "@tensorflow-models/mobilenet";
+import * as knnClassifier from "@tensorflow-models/knn-classifier";
+import axios from "axios";
 
 export default {
   name: "Home",
   components: {
     Camera
   },
-  data: function(){
-      return {
-          emotions: ['angry','neutral', 'happy'],
-          classifier: null,
-          mobilenet: null,
-          class: null,
-          detected_e: null,
-          mode: 'train',
-      }
+  data: function() {
+    return {
+      emotions: ["angry", "neutral", "happy"],
+      classifier: null,
+      mobilenet: null,
+      class: null,
+      detected_e: null,
+      mode: "train"
+    };
   },
-  mounted: function(){
-      this.init();
+  mounted: function() {
+    this.init();
   },
   methods: {
-      async init(){
-        // load the load mobilenet and create a KnnClassifier
-        this.classifier = knnClassifier.create();
-        this.mobilenet = await mobilenetModule.load();
-      },
-      trainModel(){
-        let selected = document.getElementById("emotion_options");
-        this.class = selected.options[selected.selectedIndex].value;
-        this.addExample();
-      },
-      addExample(){
-        const img= tf.fromPixels(this.$children[0].webcam.webcamElement);
-        const logits = this.mobilenet.infer(img, 'conv_preds');
-        this.classifier.addExample(logits, parseInt(this.class));
-      },
-      async getEmotion(){
-        const img = tf.fromPixels(this.$children[0].webcam.webcamElement);
-        const logits = this.mobilenet.infer(img, 'conv_preds');
-        const pred = await this.classifier.predictClass(logits);
-        console.log(pred);
-        this.detected_e = this.emotions[pred.classIndex];
-        this.registerEmotion();
-      },
-      changeOption(){
-          const selected = document.getElementById("use_case");
-          this.mode = selected.options[selected.selectedIndex].value;
-      },
-      registerEmotion(){
-          axios.post('http://localhost:3128/callback', {
-              'emotion': this.detected_e
-          }).then( () => {
-              alert('Thanks for letting us know how you feel');
-          });
-      }
+    async init() {
+      // load the load mobilenet and create a KnnClassifier
+      this.classifier = knnClassifier.create();
+      this.mobilenet = await mobilenetModule.load();
+    },
+    trainModel() {
+      let selected = document.getElementById("emotion_options");
+      this.class = selected.options[selected.selectedIndex].value;
+      this.addExample();
+    },
+    addExample() {
+      const img = tf.fromPixels(this.$children[0].webcam.webcamElement);
+      const logits = this.mobilenet.infer(img, "conv_preds");
+      this.classifier.addExample(logits, parseInt(this.class));
+    },
+    async getEmotion() {
+      const img = tf.fromPixels(this.$children[0].webcam.webcamElement);
+      const logits = this.mobilenet.infer(img, "conv_preds");
+      const pred = await this.classifier.predictClass(logits);
+      console.log(pred);
+      this.detected_e = this.emotions[pred.classIndex];
+      this.registerEmotion();
+    },
+    changeOption() {
+      const selected = document.getElementById("use_case");
+      this.mode = selected.options[selected.selectedIndex].value;
+    },
+    registerEmotion() {
+      axios
+        .post("http://safe-journey-46712.herokuapp.com:3128/callback", {
+          emotion: this.detected_e
+        })
+        .then(() => {
+          alert("Thanks for letting us know how you feel");
+        });
     }
+  }
 };
 </script>
