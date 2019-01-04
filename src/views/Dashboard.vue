@@ -10,11 +10,12 @@
     </div>
   </div>
 </template>
-
+<script src="https://js.pusher.com/4.3/pusher.min.js">
+</script>
 <script>
 export default {
   name: "Dashboard",
-  data: function(){
+  data: function() {
     return {
       emotions: {
         angry: 0,
@@ -22,28 +23,28 @@ export default {
         happy: 0
       },
       pusher_obj: null,
-      e_channel: null,
-    }
+      e_channel: null
+    };
   },
-  mounted: function(){
+  mounted: function() {
     this.init();
   },
   methods: {
-    init (){
+    init() {
       // create a new pusher object
-      this.pusher_obj = new Pusher('PUSHER_APPKEY',{
-          cluster: 'eu',
-          encrypted: true
+      this.pusher_obj = new Pusher("05983bd1d5c11248ab28", {
+        cluster: "ap1",
+        encrypted: true
       });
       // create a new channel
-      this.e_channel = this.pusher_obj.subscribe('emotion_channel');
+      this.e_channel = this.pusher_obj.subscribe("emotion_channel");
       // bind the channel to the new event and specify what should be done
       let self = this;
-      this.e_channel.bind('new_emotion', function(data) {
+      this.e_channel.bind("new_emotion", function(data) {
         //  increment the counnt for the emotion by one
         self.emotions[`${data.emotion}`] += 1;
       });
-    },
-  },
-}
+    }
+  }
+};
 </script>

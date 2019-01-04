@@ -2,16 +2,19 @@
   "name": "frontend_app",
   "version": "0.1.0",
   "private": true,
+  "homepage":"https://emotion-recognition.github.io/emotion",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@tensorflow-models/knn-classifier": "^0.2.2",
     "@tensorflow-models/mobilenet": "^0.2.2",
     "@tensorflow/tfjs": "^0.12.5",
     "axios": "^0.18.0",
+    "gh-pages": "^2.0.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1"
   },
